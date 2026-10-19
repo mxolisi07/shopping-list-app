@@ -1,33 +1,33 @@
-## Step by Step Plan
+# Step by Step Plan
 
-# Phase 1: Setup
+## Phase 1: Setup
   Install React + TypeScript (npx create-react-app my-app --template typescript).
   Install Redux Toolkit (npm install @reduxjs/toolkit react-redux).
   Install React Router (npm install react-router-dom).
   Install json-server (npm install json-server).
   Create db.json with two collections: users and shoppingLists.
 
-# Phase 2: Authentication
+## Phase 2: Authentication
   Registration Page: Form with name, surname, email, password, cell number. Encrypt password before saving.
   Login Page: Form with email + password. Decrypt stored password and validate.
   Protected Routes: Use React Router + Redux state to restrict access.
 
-# Phase 3: Profile Management
+## Phase 3: Profile Management
   Profile Page: Display user info.
   Allow update profile (name, surname, cell).
   Allow update credentials (email, password).
 
-# Phase 4: Shopping List Management
+## Phase 4: Shopping List Management
   Add Shopping List: Form with name, quantity, notes, category, image upload.
   View Shopping Lists: Display all lists belonging to logged-in user.
   Update Shopping List: Edit existing list.
   Delete Shopping List: Remove list or specific items.
 
-# Phase 5: Search + Sort
+## Phase 5: Search + Sort
   Search: Input field → filters lists by name. Updates URL (?search=keyword).
   Sort: Dropdown → sorts lists by name, category, or date. Updates URL (?sort=criteria).
 
-# Phase 6: Sharing
+## Phase 6: Sharing
   Generate a shareable link for each shopping list.
   Allow users to copy or send the link via email.
 
