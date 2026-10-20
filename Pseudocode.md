@@ -268,7 +268,7 @@ COMPONENT SortMenu(sortValue, onSort)
 END COMPONENT
 
 
-COMPONENT ShoppingItemCard(item, onEdit, onDelete)
+COMPONENT ShoppingItemCard(item, onEdit, onDelete, onShare onAdd)
     Show:
         Item image with descriptive alt text
         Item name
@@ -276,7 +276,7 @@ COMPONENT ShoppingItemCard(item, onEdit, onDelete)
         Category
         Notes
 
-    Show Edit and Delete buttons
+    Show Edit, Delete, AddToCart, and Share buttons
 END COMPONENT
 
 

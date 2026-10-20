@@ -31,6 +31,9 @@
   Generate a shareable link for each shopping list.
   Allow users to copy or send the link via email.
 
+# Figma Desing Link
+
+---> https://www.figma.com/design/v6uSspz4fgAsyXY2bXSkXJ/Shopping-List?m=auto&t=PIyw4sDKWXJ8ci1m-6
 
 
 ## React Compiler
