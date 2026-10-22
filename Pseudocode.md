@@ -1,9 +1,11 @@
 
+# Shopping List App Pseudocode
+
 Uses React, TypeScript, Redux Toolkit, React Router and json-server.
 SECURITY NOTE:
 Passwords are encrypted and decrypted.
 
-# START PROGRAM
+## START PROGRAM
 
 1. TYPES
 
@@ -464,4 +466,4 @@ WHEN the application starts
     Show the page matching the current URL
 END WHEN
 
-# FINISH PROGRAM
+## FINISH PROGRAM
