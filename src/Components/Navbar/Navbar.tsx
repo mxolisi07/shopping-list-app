@@ -22,14 +22,14 @@ const Navbar: React.FC = () => {
       <div className="logo">DB Shop</div>
 
       <div className="hamburger" onClick={toggleMenu}>
-        {isOpen ? <FaTimes size={25} color="white" /> : <FaBars size={25} color="white" />}
+        {isOpen ? <FaTimes size={25} color="black" /> : <FaBars size={25} color="black" />}
       </div>
 
       <div className={`navbar-links ${isOpen ? "active" : ""}`}>
         <NavLink to="/home" className="nav-item">Home</NavLink>
         <NavLink to="/shopping-lists" className="nav-item">Shopping Lists</NavLink>
-        <NavLink to="/cart" className="nav-item"><FaShoppingCart color="white" /></NavLink>
-        <NavLink to="/profile" className="nav-item"><FaUser color="white" /></NavLink>
+        <NavLink to="/cart" className="nav-item"><FaShoppingCart color="black" /></NavLink>
+        <NavLink to="/profile" className="nav-item"><FaUser color="black" /></NavLink>
         <button className="logout-btn" onClick={handleLogout}>LOGOUT</button>
       </div>
     </nav>

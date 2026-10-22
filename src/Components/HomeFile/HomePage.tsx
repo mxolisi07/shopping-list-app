@@ -17,19 +17,20 @@ const HomePage: React.FC = () => {
     }).shopping
   );
   const dispatch = useDispatch<any>();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState<string>("");
 
   useEffect(() => {
     dispatch(fetchItems() as any);
   }, [dispatch]);
 
-  // Edit modal state
   const [editingItem, setEditingItem] = useState<any>(null);
   const [editName, setEditName] = useState("");
   const [editPrice, setEditPrice] = useState<number>(0);
   const [editDescription, setEditDescription] = useState("");
   const [editImage, setEditImage] = useState("");
 
-  // Add modal state
   const [showAddModal, setShowAddModal] = useState(false);
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState<number>(0);
@@ -73,34 +74,77 @@ const HomePage: React.FC = () => {
     setNewImage("");
   };
 
+  const filteredItems = items
+  .filter(item => {
+    
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory = filterCategory
+      ? (item as typeof item & { category?: string }).category?.toLowerCase() === filterCategory.toLowerCase()
+      : true;
+
+    return matchesSearch && matchesCategory;
+  })
+  .sort((a, b) => {
+    if (sortOption === "Name") {
+      return a.name.localeCompare(b.name);
+    }
+    if (sortOption === "Category") {
+      const aCategory = (a as typeof a & { category?: string }).category || "";
+      const bCategory = (b as typeof b & { category?: string }).category || "";
+      return aCategory.localeCompare(bCategory);
+    }
+    if (sortOption === "Date Added") {
+      return a.id - b.id; 
+    }
+    return 0;
+  });
+
   return (
     <div className="home-container">
       <NavBar/>
       <h2 className="welcome-text">Hey, {user?.name || "Guest"}!</h2>
+        <p className="mini-text">Welcome to your home screen</p>
+        <div className="controls">
+          <div className="search-add">
+            <input 
+              type="text" 
+              placeholder="Search List" 
+              className="search-bar" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            <button className="add-btn" onClick={() => setShowAddModal(true)}>
+              Add Shopping List
+            </button>
+          </div>
 
-      <div className="search-add">
-        <input type="text" placeholder="Search List" className="search-bar" />
-        <button className="add-btn" onClick={() => setShowAddModal(true)}>Add Shopping List</button>
-      </div>
-
-      <div className="categories">
-        <button>Phones</button>
-        <button>Laptops</button>
-        <button>Keyboard</button>
-        <select className="sort-dropdown">
-          <option>Sort By</option>
-          <option>Name</option>
-          <option>Category</option>
-          <option>Date Added</option>
-        </select>
-      </div>
+          <div className="categories">
+            <button onClick={() => setFilterCategory("Phones")}>Phones</button>
+            <button onClick={() => setFilterCategory("Laptops")}>Laptops</button>
+            <button onClick={() => setFilterCategory("Keyboard")}>Keyboard</button>
+            <select 
+              className="sort-dropdown"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+            >
+              <option value="">Sort By</option>
+              <option value="Name">Name</option>
+              <option value="Category">Category</option>
+              <option value="Date Added">Date Added</option>
+            </select>
+          </div>
+        </div>
 
       {status === "loading" && <p>Loading items...</p>}
       {status === "failed" && <p className="error">{error}</p>}
 
+      <h2 className="section-header">Shopping List</h2>
       <div className="shopping-list">
-        {items?.length ? (
-          items.map(item => (
+        {filteredItems.length ? (
+          filteredItems.map(item => (
             <div key={item.id} className="card">
               <img src={item.image} alt={item.name} className="card-img" />
               <h3>{item.name}</h3>
@@ -119,7 +163,6 @@ const HomePage: React.FC = () => {
         )}
       </div>
 
-      {/* Edit Modal */}
       {editingItem && (
         <div className="modal">
           <div className="modal-content">
@@ -147,7 +190,6 @@ const HomePage: React.FC = () => {
         </div>
       )}
 
-      {/* Add Modal */}
       {showAddModal && (
         <div className="modal">
           <div className="modal-content">

@@ -18,12 +18,9 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/SignUp" element={<SignUpPage />} />
         
-
-        {/* Protected Routes */}
         <Route
           path="/home"
           element={
@@ -33,7 +30,6 @@ const App: React.FC = () => {
           }
         />
 
-        {/* Default Redirect */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

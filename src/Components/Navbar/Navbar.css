@@ -1,4 +1,5 @@
 body, html {
+  width: 100%;
   padding: 0;
   margin: 0;
   background-color: #e6dcda;
@@ -19,7 +20,7 @@ body, html {
 }
 
 .logo {
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 20px;
   font-weight: bold;
 }
@@ -36,21 +37,21 @@ body, html {
 }
 
 .nav-item {
-  color: white;
+  color: rgb(0, 0, 0);
   text-decoration: none;
   font-size: 16px;
 }
 
 .nav-item.active {
   font-weight: bold;
-  border-bottom: 2px solid white; /* highlight active route */
+  border-bottom: 3px solid #B3884D;
 }
 
 .logout-btn {
   background: red;
   color: white;
   border: none;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -67,12 +68,21 @@ body, html {
   .navbar-links {
     display: none;
     flex-direction: column;
+    position: absolute;
     width: 100%;
-    background: brown;
+    top: 100%;
+    right: 0;
+    background: #d4c4bf;
     padding: 10px 0;
   }
 
   .navbar-links.active {
     display: flex;
+    animation: slidedown 0.3s ease;
   }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

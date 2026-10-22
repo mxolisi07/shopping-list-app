@@ -59,8 +59,7 @@ function SignUpPage() {
       <p className="welcome-text">Create your account to get started.</p>
 
       <div className="signup-form">
-        {/* Inputs with validation */}
-        {/* ... same as before, but now dispatches registerUser */}
+
         <label>Enter Name</label>
         <input type="text" placeholder="Enter full name" value={name} onChange={e => setName(e.target.value)} />
         {errors.name && <span className="error">{errors.name}</span>}
