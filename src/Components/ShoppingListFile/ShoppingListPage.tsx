@@ -33,12 +33,12 @@ const ShoppingListsPage: React.FC = () => {
 
   const saveNewList = () => {
     const newList = {
-      id: Date.now(),
       title: newTitle,
       description: newDescription,
       items: []
     };
-    dispatch(addShoppingListAsync(newList));
+    dispatch(addShoppingListAsync(newList as any));
+    
     setShowAddModal(false);
     setNewTitle("");
     setNewDescription("");
@@ -88,28 +88,33 @@ const ShoppingListsPage: React.FC = () => {
       <div className="items-grid">
         {lists.length ? (
           lists.map(list => {
-            const listItems = items.filter(item => list.items.includes(item.id));
+            const listItems = items.filter(item => (list.items || []).map(String).includes(String(item.id)));
             return (
               <div key={list.id} className="card">
                 <h3>{list.title}</h3>
                 <p>{list.description}</p>
                 <p><strong>Items:</strong> {listItems.length}</p>
-                <ul>
-                  {listItems.map(item => (
-                    <li key={item.id}>
-                      {item.name} – R {item.price}
-                      <button
-                        className="remove-btn"
-                        onClick={() => removeItemFromList(list, item.id)}
-                      >
-                        Remove from List
-                      </button>
-                    </li>
-                  ))}
+                <ul className="list-items">
+                  {listItems.length ? (
+                    listItems.map(item => (
+                      <li key={item.id} className="card-actions">
+                        <span>{item.name || "Unknown"} – R{item.price || "0"}</span>
+                        <button
+                          className="remove-btn"
+                          onClick={() => removeItemFromList(list, item.id)}
+                        >
+                          Remove from List
+                        </button>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="empty-list">No items in this list.</li>
+                  )}
                 </ul>
+
                 <div className="card-actions">
                   <button onClick={() => handleEdit(list)}><FaEdit /> Edit</button>
-                  <button onClick={() => dispatch(deleteShoppingListAsync(list.id))}><FaTrash /> Delete</button>
+                  <button onClick={() => { if (list.id) { dispatch(deleteShoppingListAsync(list.id));}}}><FaTrash /> Delete</button>
                 </div>
               </div>
             );

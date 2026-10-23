@@ -24,12 +24,12 @@ const initialState: ShoppingState = {
 };
 
 export const fetchItems = createAsyncThunk("shopping/fetchItems", async () => {
-  const response = await fetch("http://localhost:5000/shoppingLists");
+  const response = await fetch("http://localhost:5000/items");
   return (await response.json()) as Item[];
 });
 
 export const addItemAsync = createAsyncThunk("shopping/addItem", async (newItem: Item) => {
-  const response = await fetch("http://localhost:5000/shoppingLists", {
+  const response = await fetch("http://localhost:5000/items", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newItem),
@@ -38,7 +38,7 @@ export const addItemAsync = createAsyncThunk("shopping/addItem", async (newItem:
 });
 
 export const editItemAsync = createAsyncThunk("shopping/editItem", async (updatedItem: Item) => {
-  const response = await fetch(`http://localhost:5000/shoppingLists/${updatedItem.id}`, {
+  const response = await fetch(`http://localhost:5000/items/${updatedItem.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedItem),
@@ -47,7 +47,7 @@ export const editItemAsync = createAsyncThunk("shopping/editItem", async (update
 });
 
 export const deleteItemAsync = createAsyncThunk("shopping/deleteItem", async (id: number) => {
-  await fetch(`http://localhost:5000/shoppingLists/${id}`, { method: "DELETE" });
+  await fetch(`http://localhost:5000/items/${id}`, { method: "DELETE" });
   return id;
 });
 

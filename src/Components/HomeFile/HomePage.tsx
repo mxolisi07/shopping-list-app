@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../StoreFile/Store";
 import { addItemAsync, deleteItemAsync, editItemAsync, fetchItems } from "../redux/shoppingSlice";
 import { FaCartPlus, FaShareAlt, FaEdit, FaTrash } from "react-icons/fa";
-import { editShoppingListAsync } from "../redux/shoppingListsSlice";
+import { addItemToListAsync, fetchShoppingLists } from "../redux/shoppingListsSlice";
 
 const HomePage: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user) as
@@ -20,11 +20,12 @@ const HomePage: React.FC = () => {
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<string>("");
 
-  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const [selectedListId, setSelectedListId] = useState<string | number | null>(null);
   
 
   useEffect(() => {
     dispatch(fetchItems() as any);
+    dispatch(fetchShoppingLists() as any);
   }, [dispatch]);
 
   const [editingItem, setEditingItem] = useState<any>(null);
@@ -65,24 +66,22 @@ const HomePage: React.FC = () => {
   };
 
   const saveNewItem = () => {
-    const newItem = {
-      id: Date.now(),
+    const newItemData = {
       name: newName,
       price: newPrice,
       description: newDescription,
       image: newImage || "/assets/default.jpg",
       category: newCategory,
     };
-    dispatch(addItemAsync(newItem));
 
     if (selectedListId) {
-    const updatedList = lists.find(l => l.id === selectedListId);
-    if (updatedList) {
-      dispatch(editShoppingListAsync({
-        ...updatedList,
-        items: [...updatedList.items, newItem.id]
-      }));
-    }
+    dispatch(addItemToListAsync({ 
+      listId: selectedListId, 
+      itemData: newItemData 
+    }));
+  } else {
+    // If no list is selected, add it to global items
+    dispatch(addItemAsync(newItemData as any));
   }
 
     setShowAddModal(false);
@@ -230,7 +229,8 @@ const HomePage: React.FC = () => {
             <label>Category</label>
             <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
             <label>Assign to List</label>
-            <select value={selectedListId ?? ""} onChange={(e) => setSelectedListId(Number(e.target.value))}>
+            <select value={selectedListId ?? ""} onChange={(e) => { const val = e.target.value; 
+              setSelectedListId(val === "" ? null : val)}}>
               <option value="">None</option>
               {lists.map(list => (
                 <option key={list.id} value={list.id}>{list.title}</option>
