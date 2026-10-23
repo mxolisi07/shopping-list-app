@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import LoginPage from './Components/loginFile/LoginPage'
 import SignUpPage from './Components/SignUpFile/SignUpPage'
 import HomePage from './Components/HomeFile/HomePage'
+import ShoppingListsPage from './Components/ShoppingListFile/ShoppingListPage'
 
 
 import './App.css'
@@ -20,6 +21,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/SignUp" element={<SignUpPage />} />
+        <Route path="/shopping-lists" element={<ShoppingListsPage />} />
+
         
         <Route
           path="/home"

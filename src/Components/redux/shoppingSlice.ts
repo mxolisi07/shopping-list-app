@@ -7,9 +7,11 @@ interface Item {
   price: number;
   description: string;
   image: string;
+  category: string;
 }
 
 interface ShoppingState {
+
   items: Item[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
@@ -82,7 +84,7 @@ const shoppingSlice = createSlice({
       .addCase(deleteItemAsync.fulfilled, (state, action) => {
         state.items = state.items.filter(item => item.id !== action.payload);
       });
-      
+
   },
 });
 

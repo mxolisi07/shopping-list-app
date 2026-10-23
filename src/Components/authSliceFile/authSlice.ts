@@ -23,7 +23,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async thunk for login
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }: { email: string; password: string }) => {
@@ -34,7 +33,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Async thunk for signup with confirmPassword validation
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (newUser: User, { rejectWithValue }) => {

@@ -5,21 +5,23 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../StoreFile/Store";
 import { addItemAsync, deleteItemAsync, editItemAsync, fetchItems } from "../redux/shoppingSlice";
 import { FaCartPlus, FaShareAlt, FaEdit, FaTrash } from "react-icons/fa";
+import { editShoppingListAsync } from "../redux/shoppingListsSlice";
 
 const HomePage: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user) as
     | { name?: string }
     | null
     | undefined;
-  const { items, status, error } = useSelector((state: RootState) =>
-    (state as RootState & {
-      shopping: { items: any[]; status: string; error: string | null };
-    }).shopping
-  );
+  const { items, status, error } = useSelector((state: RootState) => state.shopping);
+  const lists = useSelector((state: RootState) => state.shoppingLists.lists);
   const dispatch = useDispatch<any>();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<string>("");
+
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  
 
   useEffect(() => {
     dispatch(fetchItems() as any);
@@ -30,12 +32,14 @@ const HomePage: React.FC = () => {
   const [editPrice, setEditPrice] = useState<number>(0);
   const [editDescription, setEditDescription] = useState("");
   const [editImage, setEditImage] = useState("");
+  const [editCategory, setEditCategory] = useState("");
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState<number>(0);
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
+  const [newCategory, setNewCategory] = useState("");
 
   const handleEdit = (item: any) => {
     setEditingItem(item);
@@ -43,6 +47,7 @@ const HomePage: React.FC = () => {
     setEditPrice(item.price);
     setEditDescription(item.description);
     setEditImage(item.image);
+    setEditCategory(item.category);
   };
 
   const saveEdit = () => {
@@ -52,7 +57,8 @@ const HomePage: React.FC = () => {
         name: editName,
         price: editPrice,
         description: editDescription,
-        image: editImage
+        image: editImage,
+        category: editCategory,
       }));
       setEditingItem(null);
     }
@@ -65,22 +71,32 @@ const HomePage: React.FC = () => {
       price: newPrice,
       description: newDescription,
       image: newImage || "/assets/default.jpg",
+      category: newCategory,
     };
     dispatch(addItemAsync(newItem));
+
+    if (selectedListId) {
+    const updatedList = lists.find(l => l.id === selectedListId);
+    if (updatedList) {
+      dispatch(editShoppingListAsync({
+        ...updatedList,
+        items: [...updatedList.items, newItem.id]
+      }));
+    }
+  }
+
     setShowAddModal(false);
-    setNewName("");
-    setNewPrice(0);
-    setNewDescription("");
-    setNewImage("");
+    setNewName(""); setNewPrice(0); setNewDescription("");
+    setNewImage(""); setNewCategory(""); setSelectedListId(null);
+
   };
 
   const filteredItems = items
   .filter(item => {
-    
     const matchesSearch =
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
-
+      item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      
     const matchesCategory = filterCategory
       ? (item as typeof item & { category?: string }).category?.toLowerCase() === filterCategory.toLowerCase()
       : true;
@@ -88,9 +104,8 @@ const HomePage: React.FC = () => {
     return matchesSearch && matchesCategory;
   })
   .sort((a, b) => {
-    if (sortOption === "Name") {
+    if (sortOption === "Name")
       return a.name.localeCompare(b.name);
-    }
     if (sortOption === "Category") {
       const aCategory = (a as typeof a & { category?: string }).category || "";
       const bCategory = (b as typeof b & { category?: string }).category || "";
@@ -117,7 +132,7 @@ const HomePage: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               />
             <button className="add-btn" onClick={() => setShowAddModal(true)}>
-              Add Shopping List
+              Add Item
             </button>
           </div>
 
@@ -141,8 +156,8 @@ const HomePage: React.FC = () => {
       {status === "loading" && <p>Loading items...</p>}
       {status === "failed" && <p className="error">{error}</p>}
 
-      <h2 className="section-header">Shopping List</h2>
-      <div className="shopping-list">
+      <h2 className="section-header">Items</h2>
+      <div className="items-grid">
         {filteredItems.length ? (
           filteredItems.map(item => (
             <div key={item.id} className="card">
@@ -150,6 +165,7 @@ const HomePage: React.FC = () => {
               <h3>{item.name}</h3>
               <p>Price: R {item.price}</p>
               <p>{item.description}</p>
+              <p><strong>Category:</strong> {item.category}</p>
               <div className="card-actions">
                 <button><FaCartPlus /> Add to Cart</button>
                 <button><FaShareAlt /> Share</button>
@@ -182,6 +198,8 @@ const HomePage: React.FC = () => {
                 reader.readAsDataURL(file);
               }
             }} />
+            <label>Category</label>
+            <input type="text" value={editCategory} onChange={(e) => setEditCategory(e.target.value)} />
             <div className="modal-actions">
               <button onClick={saveEdit}>Save</button>
               <button onClick={() => setEditingItem(null)}>Cancel</button>
@@ -209,6 +227,16 @@ const HomePage: React.FC = () => {
                 reader.readAsDataURL(file);
               }
             }} />
+            <label>Category</label>
+            <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+            <label>Assign to List</label>
+            <select value={selectedListId ?? ""} onChange={(e) => setSelectedListId(Number(e.target.value))}>
+              <option value="">None</option>
+              {lists.map(list => (
+                <option key={list.id} value={list.id}>{list.title}</option>
+              ))}
+            </select>
+            
             <div className="modal-actions">
               <button onClick={saveNewItem}>Add</button>
               <button onClick={() => setShowAddModal(false)}>Cancel</button>

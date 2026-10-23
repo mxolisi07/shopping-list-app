@@ -61,7 +61,7 @@ TYPE AppState =
 2. JSON-SERVER API
 
 
-SET API_URL = "http://localhost:3000"
+SET API_URL = "http://localhost:5173"
 
 FUNCTION getUsers()
     RETURN GET API_URL + "/users"
