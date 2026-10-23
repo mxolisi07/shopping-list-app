@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./ShoppingListPage.css";
+import "./NavbarShop.css";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../StoreFile/Store";
+import NavBarShop from "../ShoppingListFile/NavbarShop";
 import {
   fetchShoppingLists,
   addShoppingListAsync,
@@ -9,11 +11,13 @@ import {
   editShoppingListAsync
 } from "../redux/shoppingListsSlice";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingListsPage: React.FC = () => {
   const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const { lists, status, error } = useSelector((state: RootState) => state.shoppingLists);
-
+  const { items } = useSelector((state: RootState) => state.shopping); // ✅ get items to display inside lists
 
   useEffect(() => {
     dispatch(fetchShoppingLists() as any);
@@ -57,29 +61,62 @@ const ShoppingListsPage: React.FC = () => {
     }
   };
 
+  const removeItemFromList = (list: any, itemId: number) => {
+    const updatedList = {
+      ...list,
+      items: list.items.filter((id: number) => id !== itemId)
+    };
+    dispatch(editShoppingListAsync(updatedList));
+  };
+
   return (
     <div className="shopping-lists-container">
-      <h2 className="section-header">Shopping Lists</h2>
-      <button className="add-btn" onClick={() => setShowAddModal(true)}>Add Shopping List</button>
+      <header className="page-header">
+        <NavBarShop/>
+      </header>
+
+       <h2 className="section-header">Shopping Lists</h2>
+        <div className="controls1">
+        <button className="back-btn" onClick={() => navigate("/home")}>Back to Home</button>
+        <button className="add-btn" onClick={() => setShowAddModal(true)}>Add Shopping List</button>
+        </div>
+      
 
       {status === "loading" && <p>Loading lists...</p>}
       {status === "failed" && <p className="error">{error}</p>}
 
-      <div className="shopping-lists-grid">
-        {lists.map(list => (
-          <div key={list.id} className="list-card">
-            <h3>{list.title}</h3>
-            <p>{list.description}</p>
-            <p><strong>Items:</strong> {list.items?.length || 0}</p>
-            <div className="list-actions">
-              <button onClick={() => handleEdit(list)}><FaEdit /> Edit</button>
-              <button onClick={() => dispatch(deleteShoppingListAsync(list.id))}><FaTrash /> Delete</button>
-            </div>
-            </div>
-          ))}
-         : (
+      <div className="items-grid">
+        {lists.length ? (
+          lists.map(list => {
+            const listItems = items.filter(item => list.items.includes(item.id));
+            return (
+              <div key={list.id} className="card">
+                <h3>{list.title}</h3>
+                <p>{list.description}</p>
+                <p><strong>Items:</strong> {listItems.length}</p>
+                <ul>
+                  {listItems.map(item => (
+                    <li key={item.id}>
+                      {item.name} – R {item.price}
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeItemFromList(list, item.id)}
+                      >
+                        Remove from List
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="card-actions">
+                  <button onClick={() => handleEdit(list)}><FaEdit /> Edit</button>
+                  <button onClick={() => dispatch(deleteShoppingListAsync(list.id))}><FaTrash /> Delete</button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
           <p>No shopping lists yet.</p>
-        )
+        )}
       </div>
 
       {showAddModal && (
@@ -98,7 +135,6 @@ const ShoppingListsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Edit Modal */}
       {editingList && (
         <div className="modal">
           <div className="modal-content">
