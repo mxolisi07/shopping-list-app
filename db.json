@@ -1,28 +1,13 @@
 {
   "users": [
     {
-      "id": "1",
-      "name": "Mxoliswa",
-      "email": "mxoliswa@example.com",
-      "password": "12345",
-      "confirmPassword": "12345",
-      "contactNumber": "0123456789"
-    },
-    {
       "name": "Kingsley",
-      "email": "user@example.com",
-      "contactNumber": "0896326544",
-      "password": "user12345",
-      "confirmPassword": "user12345",
-      "id": "Ion_qVZ1pVM"
-    },
-    {
-      "name": "user2",
-      "email": "user2@gmail.com",
-      "contactNumber": "0782452121",
-      "password": "user212345",
-      "confirmPassword": "user212345",
-      "id": "LuqG5yYfqXo"
+      "email": "kingsley@gmail.com",
+      "contactNumber": "0785652334",
+      "password": "king12345",
+      "confirmPassword": "king12345",
+      "id": "7XScs8ymuyY",
+      "profilePic": "blob:http://localhost:5173/a93eb63e-7859-4d62-a5bb-e600633da7b8"
     }
   ],
   "items": [
@@ -70,5 +55,6 @@
       "id": "oaGCTVjUAqo"
     }
   ],
+  "cart": [],
   "$schema": "./node_modules/json-server/schema.json"
 }

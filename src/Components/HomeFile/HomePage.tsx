@@ -6,6 +6,7 @@ import type { RootState } from "../StoreFile/Store";
 import { addItemAsync, deleteItemAsync, editItemAsync, fetchItems } from "../redux/shoppingSlice";
 import { FaCartPlus, FaShareAlt, FaEdit, FaTrash } from "react-icons/fa";
 import { addItemToListAsync, fetchShoppingLists } from "../redux/shoppingListsSlice";
+import { addToCartAsync } from "../redux/cartSlice";
 
 const HomePage: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user) as
@@ -166,7 +167,8 @@ const HomePage: React.FC = () => {
               <p>{item.description}</p>
               <p><strong>Category:</strong> {item.category}</p>
               <div className="card-actions">
-                <button><FaCartPlus /> Add to Cart</button>
+                <button onClick={() => dispatch(addToCartAsync({ ...item, quantity: 1}))}>
+                  <FaCartPlus /> Add to Cart</button>
                 <button><FaShareAlt /> Share</button>
                 <button onClick={() => handleEdit(item)}><FaEdit /> Edit</button>
                 <button onClick={() => dispatch(deleteItemAsync(item.id))}><FaTrash /> Delete</button>
