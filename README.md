@@ -1,3 +1,6 @@
+# Deployment Link Netlify
+---> https://shopping-lists-application.netlify.app/login
+
 # Step by Step Plan
 
 ## Phase 1: Setup
