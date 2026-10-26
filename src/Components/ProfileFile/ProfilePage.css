@@ -1,0 +1,82 @@
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+}
+
+.profile-info:hover {
+  opacity: 0.9;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.profile-email {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.logout-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-card {
+  margin-top: 70px;
+  text-align: center;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-actions button {
+  margin: 10px;
+  padding: 8px 16px;
+  background: #B3884D;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-actions button:hover {
+  background: #ccc;
+}
+
+.back-home-btn {
+  margin: 10px;
+  padding: 8px 16px;
+  background: #B3884D;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.back-home-btn:hover {
+  opacity: 0.9;
+}

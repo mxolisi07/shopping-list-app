@@ -1,0 +1,109 @@
+.signup-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background: #d4c4bf;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.signup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #4b0082;
+}
+
+.signup-header i {
+  font-size: 24px;
+}
+
+.logo-text2 {
+  color: black;
+  font-weight: bold;
+  font-size: 30px;
+  align-items: center;
+}
+
+.welcome-text {
+  text-align: left;
+  margin: 10px 0 20px;
+  font-size: 14px;
+  color: #000000;
+}
+
+.signup-form label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+.signup-form input {
+  width: 94%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #dfdcdc;
+  color: #000000;
+}
+
+.signup-links {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.signup-links a {
+  font-size: 12px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.signup-links a:hover {
+  text-decoration: underline;
+  color: #502C25;
+}
+
+.signup-buttons {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+.cancel-btn {
+  background: #A4735B;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.cancel-btn:hover {
+  background: #875E4A;
+}
+
+.signup-btn {
+  background: #A4735B;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.signup-btn:hover {
+  background: #875E4A;
+}
+
+@media (max-width: 480px) {
+  .signup-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .signup-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
