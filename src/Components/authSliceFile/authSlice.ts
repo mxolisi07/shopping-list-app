@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import bcrypt from "bcryptjs";
 import type { RootState } from "../StoreFile/Store"
 
 interface User {
@@ -6,8 +7,8 @@ interface User {
   name: string;
   email: string;
   contactNumber: string;
-  password?: string;
-  confirmPassword?: string;
+  password: string;
+  confirmPassword: string;
   profilePic?: string;
 }
 
@@ -28,10 +29,16 @@ const initialState: AuthState = {
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }: { email: string; password: string }) => {
-    const response = await fetch(`http://localhost:5000/users?email=${email}&password=${password}`);
+    const response = await fetch(`http://localhost:5000/users?email=${email}`);
     const data = await response.json();
     if (data.length === 0) throw new Error("Invalid credentials");
-    return data[0];
+    const user = data[0];
+
+    // ✅ Compare entered password with hashed password
+    const isMatch = bcrypt.compareSync(password, user.password);
+    if (!isMatch) throw new Error("Invalid credentials");
+
+    return user;
   }
 );
 
@@ -42,10 +49,16 @@ export const registerUser = createAsyncThunk(
       return rejectWithValue("Passwords do not match");
     }
 
+    const hashedPassword = bcrypt.hashSync(newUser.password, 10);
+
     const response = await fetch("http://localhost:5000/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newUser),
+      body: JSON.stringify({
+        ...newUser,
+        password: hashedPassword,
+        confirmPassword: undefined, // don’t store confirmPassword
+      }),
     });
 
     if (!response.ok) {

@@ -14,7 +14,7 @@ const ProfilePage: React.FC = () => {
   const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
   const [isCredentialsModalOpen, setCredentialsModalOpen] = useState(false);
 
-  const [detailsForm, setDetailsForm] = useState({
+  const [detailsForm] = useState({
     name: user?.name || "",
     email: user?.email || "",
     profilePic: user?.profilePic || "",
@@ -31,14 +31,52 @@ const ProfilePage: React.FC = () => {
     navigate("/login");
   };
 
-  const handleDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-    if (name === "profilePic" && files?.[0]) {
-      setDetailsForm({ ...detailsForm, profilePic: URL.createObjectURL(files[0]) });
-    } else {
-      setDetailsForm({ ...detailsForm, [name]: value });
+ const handleDetailsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, files } = e.target;
+
+  if (name === "profilePic" && files?.[0]) {
+    try {
+      // Step 1: Upload file
+      const formData = new FormData();
+      formData.append("profilePic", files[0]);
+
+      const uploadResponse = await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Upload failed");
+      }
+
+      // ✅ Only parse once
+      const uploadData = await uploadResponse.json();
+      console.log(uploadData);
+
+      // Step 2: Build updated details
+      const updatedDetails = { profilePic: uploadData.filePath };
+
+      // Step 3: PATCH user record in db.json
+      if (user) {
+        const patchResponse = await fetch(`http://localhost:5000/api/users/${user.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedDetails),
+        });
+
+        if (!patchResponse.ok) {
+          throw new Error("Failed to update user profile");
+        }
+
+        dispatch(updateUserDetailsAsync(updatedDetails));
+      }
+    } catch (err) {
+      console.error("Error updating profile picture:", err);
     }
-  };
+  }
+};
+
+
 
   const handleCredentialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

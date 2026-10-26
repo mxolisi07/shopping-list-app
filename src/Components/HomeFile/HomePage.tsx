@@ -81,7 +81,6 @@ const HomePage: React.FC = () => {
       itemData: newItemData 
     }));
   } else {
-    // If no list is selected, add it to global items
     dispatch(addItemAsync(newItemData as any));
   }
 
@@ -117,6 +116,22 @@ const HomePage: React.FC = () => {
     return 0;
   });
 
+  const handleShare = () => {
+  if (navigator.share) {
+    navigator.share({
+      title: "Check out my profile",
+      text: "Here’s my profile info!",
+      url: window.location.href, 
+    })
+    .then(() => console.log("Shared successfully"))
+    .catch((error) => console.error("Error sharing:", error));
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied to clipboard!");
+  }
+};
+
+
   return (
     <div className="home-container">
       <NavBar/>
@@ -137,6 +152,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="categories">
+            <button onClick={() => setFilterCategory("")}>All</button>
             <button onClick={() => setFilterCategory("Phones")}>Phones</button>
             <button onClick={() => setFilterCategory("Laptops")}>Laptops</button>
             <button onClick={() => setFilterCategory("Keyboard")}>Keyboard</button>
@@ -169,7 +185,7 @@ const HomePage: React.FC = () => {
               <div className="card-actions">
                 <button onClick={() => dispatch(addToCartAsync({ ...item, quantity: 1}))}>
                   <FaCartPlus /> Add to Cart</button>
-                <button><FaShareAlt /> Share</button>
+                <button onClick={handleShare}><FaShareAlt /> Share</button>
                 <button onClick={() => handleEdit(item)}><FaEdit /> Edit</button>
                 <button onClick={() => dispatch(deleteItemAsync(item.id))}><FaTrash /> Delete</button>
               </div>
